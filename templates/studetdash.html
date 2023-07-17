@@ -1,0 +1,162 @@
+{% extends "starter.html" %}
+{% load static %}
+{% load joblist %}
+{% block content %}
+{% apply_count request.user as data_dict %}
+  <section class="card-target" >
+    <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="avatar-danger rounded">
+                    <i class="bi bi-bullseye avatar-title  text-danger"></i>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-end">
+                    <h3 class="text-dark my-1"><span data-plugin="counterup">{{data_dict|apply_count_filter:'job_list'}}</span></h3>
+                    <p class="text-muted mb-1 text-truncate">Applied Jobs</p>
+                  </div>
+                </div>
+              </div>
+           
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="avatar-info rounded">
+                    <i class="fe-shopping-cart "></i>
+                    <i class="fa-solid fa-business-time"></i>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-end">
+                    <h3 class="text-dark my-1"><span data-plugin="counterup">{% all_jobs_count %}</span></h3>
+                    <p class="text-muted mb-1 text-truncate">Total Jobs</p>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="avatar-warning rounded">
+                    <i class="bi bi-bar-chart avatar-title font-22 text-warning"></i>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-end">
+                    <h3 class="text-dark my-1"><span data-plugin="counterup">{{data_dict|apply_count_filter:'in_process'}}</span></h3>
+                    <p class="text-muted mb-1 text-truncate">In-Process</p>
+                  </div>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="avatar-dark rounded">
+
+                    <i class="bi bi-cpu-fill avatar-title font-22 text-dark"></i>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-end">
+                    <h3 class="text-dark my-1"><span data-plugin="counterup">{{data_dict|apply_count_filter:'selected'}}</span></h3>
+                    <p class="text-muted mb-1 text-truncate">Selected</p>
+                  </div>
+                </div>
+              </div>
+      
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <section class="table-list">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-widght">
+               
+                <div class="d-flex align-items-center">
+                  <h4 class="header-title mb-0">Job list</h4>
+                 
+                </div>
+
+              </div>
+              
+              <div id="cardCollpase4" class="collapse show">
+                <div class="table-responsive pt-3">
+                  <table class="table table-centered table-nowrap table-borderless mb-0 table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Job Title</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th> Is-Applied</th>
+                        <th>Status</th>
+                        <th>ORG</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in job_list %}
+                    {% check_apply job request.user as job_data_list %}
+                      <tr>
+                        <td>{{job.title}}</td>
+                        <td>{{job.start_date}}</td>
+                         <td>{{job.end_date}}</td>
+                        <td>
+                          
+                          {% if job_data_list|check_apply_filter:'apply_result' == True %}
+                          <i style='color:green;' class="fa-regular fa-circle-check"></i>
+                          {% else %}
+                          <i style='color:red;' class="fa-regular fa-circle-xmark"></i>
+                          {% endif %}
+                        </td>
+                         <td>{{job_data_list|check_apply_filter:'status'}}</td>
+                        <td>{{job.company}}</td>
+                        <td>
+                        {% if job_data_list|check_apply_filter:'apply_result' == False %}
+                        <a target="_blank" href="{% url 'common:apply_job' job.id %}"><i class="fa-regular fa-hand-pointer"></i></a>
+                        {% endif %}
+                        <a target="_blank" href="{% url 'common:job_details' job.id %}"><i class="fa-solid fa-eye"></i></a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

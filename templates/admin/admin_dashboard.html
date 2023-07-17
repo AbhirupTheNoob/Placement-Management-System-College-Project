@@ -1,0 +1,89 @@
+{% extends "starter.html" %}
+{% load static %}
+{% load joblist %}
+{% block content %}
+  <section class="table-list">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-widght">
+               
+                <div class="d-flex align-items-center">
+                  <h4 class="header-title mb-0">Job list</h4>
+                 
+                 </div>
+                 <div class="search">
+                  <a>
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#create_job">Create-Job</button>
+                  </a>
+                  
+                </div>
+              </div>
+              
+              <div id="cardCollpase4" class="collapse show">
+                <div class="table-responsive pt-3">
+                  <table class="table table-centered table-nowrap table-borderless mb-0 table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Job ID</th>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Opening</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in job_list %}
+                      <tr>
+                        <td>{{job.id}}</td>
+                        <td>{{job.title}}</td>
+                        <td>{{job.company}}</td>
+                        <td>{{job.openings}}</td>
+                         <td>{{job.start_date}}</td>
+                         <td>{{job.end_date}}</td>
+                        <td>
+                          <a target="_blank" href="{% url 'common:applied_student_list' %}?job_id={{job.id}}"><i class="fa-solid fa-eye"></i></a>
+                        </td>
+                      </tr>
+
+                      
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<div class="modal fade" id="create_job" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Post New Job</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method='post' action='{% url "common:create_job" %}'>
+        {% csrf_token %}
+        {{form.as_p}}
+        <br>
+        <br>
+        <center>
+        <button class='btn btn-success' type='submit'>create job</button>
+        </center>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

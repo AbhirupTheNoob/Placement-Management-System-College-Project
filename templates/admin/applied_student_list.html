@@ -1,0 +1,75 @@
+{% extends "starter.html" %}
+{% load static %}
+{% load joblist %}
+{% block content %}
+  <section class="table-list">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-widght">
+               
+                <div class="d-flex align-items-center">
+                  <h4 class="header-title mb-0">Applied Student List</h4>
+                 
+                 </div>
+                 <div class="search">
+                    {% for status in status_list %}
+                        <a href="{% url 'common:applied_student_list' %}?job_id={{job_id}}&filter={{status}}">
+                            {{status}}
+                        </a>
+                    {% endfor %}
+
+                  
+                </div>
+              </div>
+              
+              <div id="cardCollpase4" class="collapse show">
+                <div class="table-responsive pt-3">
+                  <table class="table table-centered table-nowrap table-borderless mb-0 table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Student Id</th>
+                        <th>Name</th>
+                        <th>CGPA</th>
+                        <th>10th Marks</th>
+                        <th>12th Marks</th>
+                        <th>status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in applied_job_list %}
+                    {% get_profile job.user as profile %}
+                      <tr>
+                        <td>{{profile.id}}</td>
+                        <td>{{job.user.full_name}}</td>
+                        <td>{{profile.cgpa}}</td>
+                        <td>{{profile.tenth_marks}}</td>
+                        <td>{{profile.twelveth_marks}}</td>
+                        <td>{{job.status}}</td>
+                        <td>
+                          <a data-bs-toggle="modal" data-bs-target="#aj{{job.id}}"><i class="fa-solid fa-eye"></i></a>
+                        </td>
+                      </tr>
+
+                      {% include 'admin/student_detail_modal.html' %}
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+{% endblock content %}
+
+student_detail_modal.html
